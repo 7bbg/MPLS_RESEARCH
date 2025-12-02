@@ -1,0 +1,105 @@
+{
+  "events": [
+    {
+      "type": "cycle-start",
+      "list_name": "default",
+      "id": 0,
+      "hostname": "ASUSTUFAN",
+      "start_time": 1764594472
+    },
+    {
+      "type": "ping",
+      "version": "0.4",
+      "method": "icmp-echo",
+      "src": "172.26.87.206",
+      "dst": "192.168.1.0",
+      "start": {
+        "sec": 1764594472,
+        "usec": 67964
+      },
+      "stop_reason": "done",
+      "stop_data": 0,
+      "ping_sent": 6,
+      "probe_size": 84,
+      "userid": 0,
+      "ttl": 64, 
+      "tos": 0,
+      "wait": 1,
+      "timeout": 1,
+      "responses": [],
+      "no_responses": [
+        {
+          "seq": 0,
+          "tx": {
+            "sec": 1764594472,
+            "usec": 68795
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 0,
+          "probe_ipid": 1325
+        },
+        {
+          "seq": 1,
+          "tx": {
+            "sec": 1764594473,
+            "usec": 68883
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 1,
+          "probe_ipid": 50687
+        },
+        {
+          "seq": 2,
+          "tx": {
+            "sec": 1764594474,
+            "usec": 69339
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 2,
+          "probe_ipid": 59767
+        },
+        {
+          "seq": 3,
+          "tx": {
+            "sec": 1764594475,
+            "usec": 69434
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 3,
+          "probe_ipid": 35456
+        },
+        {
+          "seq": 4,
+          "tx": {
+            "sec": 1764594476,
+            "usec": 70486
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 4,
+          "probe_ipid": 37269
+        },
+        {
+          "seq": 5,
+          "tx": {
+            "sec": 1764594477,
+            "usec": 70632
+          },
+          "icmp_id": 2316,
+          "icmp_seq": 5,
+          "probe_ipid": 31381
+        }
+      ],
+      "statistics": {
+        "replies": 0,
+        "loss": 1
+      }
+    },
+    {
+      "type": "cycle-stop",
+      "list_name": "default",
+      "id": 0,
+      "hostname": "ASUSTUFAN",
+      "stop_time": 1764594478
+    }
+  ]
+}
