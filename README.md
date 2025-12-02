@@ -48,3 +48,10 @@ This project analyzes network paths to detect and visualize MPLS tunnels (Explic
 - `src/techniques.py` – Detection logic
 - `src/test.py` – Test script with simulated data
 - `data/` – Input and output data files
+
+## References
+
+1. RFC 4950
+2. RFC 3031
+3. Van Aubel, Y., Luttringer, J.-R., Mérindol, P., Pansiot, J.-J., & Donnet, B. (Year). TNT, Watch me Explode: A Light in the Dark for Revealing MPLS Tunnels.
+4. Revealing MPLS tunnels obscured from traceroute, B. Donnet, M. Luckie, P. Merindol, J-J Pansiot
