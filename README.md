@@ -1,6 +1,6 @@
 # MPLS Tunnel Detection & Visualization
 
-This project analyzes network paths to detect and visualize MPLS tunnels (Explicit, Implicit, Opaque, Invisible) using traceroute and ping data.
+This project analyzes network paths to detect and visualize MPLS(Multiprotocol Label Switching) tunnels (Explicit, Implicit, Opaque, Invisible) using traceroute and ping data.
 
 ## Features
 
