@@ -36,6 +36,27 @@ This project analyzes network paths to detect and visualize MPLS tunnels (Explic
 - Analysis results printed to console
 - Path visualizations saved as PNG in `data/`
 
+## Result
+
+### Visualization
+
+![Path Visualization with Detected MPLS Tunnels](data/path_visualization.png)
+
+
+### Aggregate classifications (successful traces only)
+
+Totals are counts of hop classifications aggregated across all successfully parsed traces:
+
+| Hop classification | Count | Share of classified hops* |
+|---|---:|---:|
+| IP Router | 25 | 75.8% |
+| Invisible Tunnel (TTL Shift) | 4 | 12.1% |
+| Opaque Tunnel (LH, 253 hidden hops) | 4 | 12.1% |
+
+\*Share computed over `25 + 4 + 4 = 33` total classified hops.
+
+> more info in `data/aggregate_analysis.json`.
+
 ## Requirements
 
 - Python 3.x

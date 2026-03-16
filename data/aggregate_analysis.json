@@ -1,0 +1,111 @@
+{
+  "trace_count": 3,
+  "trace_count_including_errors": 4,
+  "traces_with_any_tunnel": 2,
+  "tunnel_type_totals_by_hop": {
+    "IP Router": 25,
+    "Invisible Tunnel (TTL Shift)": 4,
+    "Opaque Tunnel (LH, 253 hidden hops)": 4
+  },
+  "per_trace": [
+    {
+      "file": "data\\mininet_runs\\run01.json",
+      "hop_count": 2,
+      "any_tunnel": false,
+      "hop_type_counts": {
+        "IP Router": 2
+      },
+      "detector_results": {
+        "Implicit (Q-TTL)": [],
+        "Opaque": [],
+        "Invisible": []
+      }
+    },
+    {
+      "file": "data\\ping_data_clean.json",
+      "error": "Unrecognized trace JSON format in data\\ping_data_clean.json"
+    },
+    {
+      "file": "data\\results.json",
+      "hop_count": 17,
+      "any_tunnel": true,
+      "hop_type_counts": {
+        "IP Router": 12,
+        "Invisible Tunnel (TTL Shift)": 2,
+        "Opaque Tunnel (LH, 253 hidden hops)": 3
+      },
+      "detector_results": {
+        "Implicit (Q-TTL)": [],
+        "Opaque": [
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": null,
+            "last_hop": "128.241.11.37"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": "128.241.11.37",
+            "last_hop": "129.250.3.61"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": null,
+            "last_hop": "52.93.10.235"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": "52.93.10.235",
+            "last_hop": "52.93.10.230"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": null,
+            "last_hop": "15.230.29.122"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": "15.230.29.122",
+            "last_hop": "52.93.10.70"
+          }
+        ],
+        "Invisible": [],
+        "TTL Shift Anomaly": "Significant TTL Shift detected between Hop 8 (198.28.138.165) and Hop 9 (128.241.11.37). Returned TTL only dropped by 1. This suggests a block of hidden hops."
+      }
+    },
+    {
+      "file": "data\\traceroute1_clean.json",
+      "hop_count": 14,
+      "any_tunnel": true,
+      "hop_type_counts": {
+        "IP Router": 11,
+        "Invisible Tunnel (TTL Shift)": 2,
+        "Opaque Tunnel (LH, 253 hidden hops)": 1
+      },
+      "detector_results": {
+        "Implicit (Q-TTL)": [],
+        "Opaque": [
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": null,
+            "last_hop": "52.93.11.77"
+          },
+          {
+            "type": "Opaque Tunnel",
+            "hidden_hops": 253,
+            "ingress_ler": "52.93.11.77",
+            "last_hop": "52.93.11.74"
+          }
+        ],
+        "Invisible": [],
+        "TTL Shift Anomaly": "Significant TTL Shift detected between Hop 8 (198.28.138.165) and Hop 9 (128.241.11.37). Returned TTL only dropped by 1. This suggests a block of hidden hops."
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import re
 import typing as t
+from pathlib import Path
 import matplotlib.pyplot as plt
 import networkx as nx
 import json
@@ -80,7 +81,12 @@ def analyze_and_flag_path(path: t.List[Hop]) -> t.Dict[str, t.Any]:
 
 # --- 3. Visualization ---
 
-def plot_path_results(path: t.List[Hop], path_title: str , save_path: str = None, analysis_results: t.Dict[str, t.Any] = None) -> None:
+def plot_path_results(
+    path: t.List[Hop],
+    path_title: str,
+    save_path: str = None,
+    analysis_results: t.Dict[str, t.Any] = None,
+) -> None:
     """Creates a network-like visualization of the path, highlighting detected tunnels."""
     G = nx.DiGraph()
     labels: t.Dict[int, str] = {}
@@ -106,22 +112,23 @@ def plot_path_results(path: t.List[Hop], path_title: str , save_path: str = None
         # Add edge to next hop if next hop responded (skip TIMEOUT edges)
         if i < len(path) - 1:
             next_hop = path[i + 1]
-            if next_hop.ip_address != "TIMEOUT":
-                G.add_edge(current_hop.hop_index, next_hop.hop_index)
+            # if next_hop.ip_address != "TIMEOUT":
+            #     G.add_edge(current_hop.hop_index, next_hop.hop_index)
+            G.add_edge(current_hop.hop_index, next_hop.hop_index)
 
     # Add inferred tunnel edges (Invisible/Opaque)
     ip_to_nodes: t.Dict[str, t.List[int]] = {}
     for node_id, data in G.nodes(data=True):
         ip_to_nodes.setdefault(data.get("ip"), []).append(node_id)
 
-    if analysis_results and  "invisible_results" in analysis_results:
+    # FIX: correct keys ("Invisible"/"Opaque"), not "invisible_results"/"opaque_results"
+    if analysis_results:
         for result in analysis_results.get("Invisible", []):
             start_nodes = ip_to_nodes.get(result["start_ip"], [])
             end_nodes = ip_to_nodes.get(result["end_ip"], [])
             if start_nodes and end_nodes:
                 G.add_edge(start_nodes[0], end_nodes[0], color="purple", style="dashed", weight=3)
-    
-    if analysis_results and "opaque_results" in analysis_results:
+
         for result in analysis_results.get("Opaque", []):
             ler_nodes = ip_to_nodes.get(result["ingress_ler"], [])
             lh_nodes = ip_to_nodes.get(result["last_hop"], [])
@@ -155,7 +162,19 @@ def plot_path_results(path: t.List[Hop], path_title: str , save_path: str = None
 
     plt.axis("off")
     plt.tight_layout()
-    plt.savefig(save_path, dpi=150)
+
+    if save_path:
+        project_root = Path(__file__).resolve().parents[1]  # ...\research_mpls_pract
+        print(f"project_root: {project_root}")
+        out_path = Path(save_path)
+        print(f"out_path: {out_path}")
+
+        # Treat relative paths as relative to project root (not CWD)
+        if not out_path.is_absolute():
+            out_path = project_root / out_path
+
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        plt.savefig(out_path, dpi=150)
     plt.show()
     plt.close()
 
@@ -163,33 +182,48 @@ def plot_path_results(path: t.List[Hop], path_title: str , save_path: str = None
 
 def load_trace_from_json(json_path: str) -> t.List[Hop]:
     """
-    Loads the first 'trace' object from a results.json file and returns a list of Hop objects.
+    Loads a traceroute JSON file and returns a list of Hop objects.
+
+    Supports:
+      1) "clean" scamper-like wrapper: {"events":[..., {"type":"trace","hops":[...]} , ...]}
+      2) single trace object: {"type":"trace","hops":[...]}
     """
-    hops: t.List[Hop] = []
     with open(json_path, "r") as f:
-        content = f.read()
+        obj = json.load(f)
 
-    
-    trace = json.loads(content)
-    
+    # Case 1: wrapper with events
+    trace_obj: t.Optional[dict] = None
+    if isinstance(obj, dict) and "events" in obj and isinstance(obj["events"], list):
+        for ev in obj["events"]:
+            if isinstance(ev, dict) and ev.get("type") == "trace" and "hops" in ev:
+                trace_obj = ev
+                break
+    # Case 2: direct trace
+    if trace_obj is None and isinstance(obj, dict) and obj.get("type") == "trace" and "hops" in obj:
+        trace_obj = obj
 
-    # Build Hop objects from the trace's hops
-    for i, hop in enumerate(trace["events"][1]["hops"], 1):
+    if trace_obj is None:
+        raise ValueError(f"Unrecognized trace JSON format in {json_path}")
+
+    hops: t.List[Hop] = []
+    for i, hop in enumerate(trace_obj.get("hops", []), 1):
         ip = hop.get("addr", "TIMEOUT")
         quoted_ttl = hop.get("icmp_q_ttl", 0)
-        # RFC4950/MPLS: check for 'icmpext' and 'mpls_labels'
+
         has_rfc4950 = False
         lse_ttl_value = None
-        if "icmpext" in hop and hop["icmpext"]:
+        if hop.get("icmpext"):
             for ext in hop["icmpext"]:
-                if "mpls_labels" in ext and ext["mpls_labels"]:
+                if ext.get("mpls_labels"):
                     has_rfc4950 = True
                     lse_ttl_value = ext["mpls_labels"][0].get("mpls_ttl")
                     break
+
         traceroute_ttl = hop.get("reply_ttl", 0)
-        ping_ttl = 0  # Not available in this data (Note: ping TTL for each hop not recorded)
+        ping_ttl = 0  # still not available from current datasets
         rtt = hop.get("rtt", 0.0)
         hops.append(Hop(i, ip, quoted_ttl, has_rfc4950, lse_ttl_value, traceroute_ttl, ping_ttl, rtt))
+
     return hops
 
 # --- Use the data instead of the simulated path ---
