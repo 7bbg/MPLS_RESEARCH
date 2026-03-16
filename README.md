@@ -40,7 +40,7 @@ This project analyzes network paths to detect and visualize MPLS(Multiprotocol L
 
 ### Visualization
 
-![Path Visualization with Detected MPLS Tunnels](data/path_visualization.png)
+![Path Visualization with Detected MPLS Tunnels](./data/path_visualization_network_test.png)
 
 
 ### Aggregate classifications (successful traces only)
